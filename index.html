@@ -74,12 +74,15 @@
             position: relative;
         }
 
+        #pantalla-principal.activo,
+        #pantalla-bienvenida.activo {
+            position: relative;
+        }
+
         #pantalla-principal.activo {
             display: flex;
             opacity: 1;
             transform: translateY(0);
-            position: relative;
-            /* Cambia a relative para que el scroll funcione de forma natural */
         }
 
         /* --- EFECTOS DE CORAZONES FLOTANTES --- */
@@ -2213,18 +2216,29 @@
         }
 
         .lightbox-cerrar {
-            position: absolute;
-            top: -50px;
-            right: 0;
+            position: fixed;
+            top: 20px;
+            right: 20px;
             color: #ffffff;
             font-size: 2.5em;
             font-weight: 300;
             cursor: pointer;
-            transition: color 0.2s;
+            transition: color 0.2s, background-color 0.2s, transform 0.2s;
+            z-index: 1010;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
         }
 
         .lightbox-cerrar:hover {
             color: var(--primary-color);
+            background: rgba(0, 0, 0, 0.6);
+            transform: scale(1.1);
         }
 
         /* Botones de navegación del Lightbox */
@@ -2270,6 +2284,7 @@
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
         }
 
+        /* --- RESPONSIVIDAD --- */
         /* --- RESPONSIVIDAD --- */
         @media (max-width: 1024px) {
             .collage-container {
@@ -2325,28 +2340,139 @@
             .tiempo-valor-nuevo {
                 font-size: 2.2em;
             }
+
+            .lightbox-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 1.5em;
+            }
+
+            .lightbox-cerrar {
+                top: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 2.2em;
+            }
         }
 
         @media (max-width: 480px) {
-            .collage-container {
-                grid-template-columns: 1fr;
-                grid-auto-rows: 240px;
+            .pantalla {
+                padding: 25px 12px;
             }
 
-            .collage-item.grande,
-            .collage-item.largo-h,
+            .carta-bienvenida {
+                padding: 30px 18px;
+                border-radius: 20px;
+                margin: 0 5px;
+            }
+
+            .carta-bienvenida h1 {
+                font-size: 1.8em;
+                margin-bottom: 15px;
+            }
+
+            .carta-bienvenida p {
+                font-size: 0.95em;
+                line-height: 1.6;
+                margin-bottom: 15px;
+            }
+
+            .btn-romantico {
+                padding: 12px 24px;
+                font-size: 1em;
+                gap: 8px;
+            }
+
+            .principal-header h2 {
+                font-size: 1.6em;
+                padding: 0 5px;
+            }
+
+            .principal-header p {
+                font-size: 0.95em;
+                padding: 0 8px;
+                line-height: 1.5;
+            }
+
+            .collage-container {
+                grid-template-columns: repeat(2, 1fr);
+                grid-auto-rows: 130px;
+                gap: 8px;
+                padding: 4px;
+            }
+
+            .collage-item.grande {
+                grid-row: span 2;
+                grid-column: span 2;
+            }
+
+            .collage-item.largo-h {
+                grid-column: span 2;
+            }
+
             .collage-item.largo-v {
-                grid-row: span 1 !important;
-                grid-column: span 1 !important;
+                grid-row: span 2;
+            }
+
+            .seccion-contador-card {
+                padding: 25px 15px;
+                border-radius: 20px;
+                margin-top: 10px;
+            }
+
+            .seccion-contador-card h3 {
+                font-size: 1.25em;
+                margin-bottom: 15px;
             }
 
             .contador-grid {
-                gap: 12px;
+                gap: 8px;
             }
 
             .tiempo-unidad-card {
-                min-width: calc(50% - 6px);
-                max-width: 100%;
+                min-width: calc(50% - 4px);
+                max-width: calc(50% - 4px);
+                padding: 12px 6px;
+                border-radius: 12px;
+            }
+
+            .tiempo-valor-nuevo {
+                font-size: 1.9em;
+            }
+
+            .tiempo-etiqueta {
+                font-size: 0.7em;
+                letter-spacing: 0.5px;
+            }
+
+            .lightbox-cerrar {
+                top: 10px;
+                right: 10px;
+                width: 38px;
+                height: 38px;
+                font-size: 1.8em;
+            }
+
+            .lightbox-nav {
+                width: 36px;
+                height: 36px;
+                font-size: 1.2em;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .carta-bienvenida h1 {
+                font-size: 1.5em;
+            }
+
+            .collage-container {
+                grid-auto-rows: 110px;
+                gap: 6px;
+            }
+
+            .tiempo-valor-nuevo {
+                font-size: 1.6em;
             }
         }
     </style>
@@ -2355,7 +2481,7 @@
 <body>
 
     <!-- PANTALLA 1: BIENVENIDA -->
-    <div id="pantalla-bienvenida" class="pantalla">
+    <div id="pantalla-bienvenida" class="pantalla activo">
         <!-- Corazones se generarán dinámicamente con JavaScript -->
         <div class="carta-bienvenida">
             <h1>¡Buenos días, mi amorcito! ❤️</h1>
@@ -2779,6 +2905,7 @@
             const bienvenida = document.getElementById('pantalla-bienvenida');
             const principal = document.getElementById('pantalla-principal');
 
+            bienvenida.classList.remove('activo');
             bienvenida.style.opacity = '0';
             bienvenida.style.transform = 'scale(0.98)';
 
@@ -2817,6 +2944,7 @@
                 bienvenida.style.display = 'flex';
                 // Reflow
                 bienvenida.offsetHeight;
+                bienvenida.classList.add('activo');
                 bienvenida.style.opacity = '1';
                 bienvenida.style.transform = 'scale(1)';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
